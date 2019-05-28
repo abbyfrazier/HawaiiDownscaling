@@ -4,6 +4,7 @@
 
 #STEP 5: Create Present & Future Means
 #STEP 6: Calculate Future change (% and absolute (inches/mm) change relative to present day)
+#STEP 7: calculate new future means based on observation-based Present day maps (Rainfall Atlas)
 
 rm(list=ls())
 
@@ -194,4 +195,132 @@ for (y in 1:2){  #loop through variables (rain & temp)
   
 } #next variable
 
+
+
+##############################################################################################
+#STEP 7: calculate future means from observation-based present-day maps
+#   For rainfall, calculate future mean using the Rainfall Atlas of Hawaii mean annual rainfall map (Giambelluca et al. 2013) as base 
+#   For Temperature, use the Climate of Hawaii mean annual temp. map (Giambelluca et al. 2014) as base 
+
+#Open present day means from Stat DS (which are based on observations)
+#Open inches/mm change from Dyn DS (DegC/DegF)
+#Add inches change to present-day mean (from observations) in inches to get future Dyn DS mean in inches (do for all units)
+
+#Not written efficiently (no loops), one line per each map
+
+
+#OPEN PRESENT-DAY MEANS (BASED ON OBSERVATIONS) for each season, all units
+setwd("H:\\Downscaling_TIF_processing\\StatDS_RainfallTIF\\StatDS_SeasMeans_State_RF_250m")
+pres.obsmn.ann.in<-raster("StatDS_HI_RF_present_mean_in_ann_2007.tif")
+pres.obsmn.ann.mm<-raster("StatDS_HI_RF_present_mean_mm_ann_2007.tif")
+pres.obsmn.wet.in<-raster("StatDS_HI_RF_present_mean_in_wet_2007.tif")
+pres.obsmn.wet.mm<-raster("StatDS_HI_RF_present_mean_mm_wet_2007.tif")
+pres.obsmn.dry.in<-raster("StatDS_HI_RF_present_mean_in_dry_2007.tif")
+pres.obsmn.dry.mm<-raster("StatDS_HI_RF_present_mean_mm_dry_2007.tif")
+setwd("H:\\Downscaling_TIF_processing\\StatDS_TemperatureTIF\\StatDS_SeasMeans_State_Temp_250m")
+pres.obsmn.ann.degc<-raster("StatDS_HI_Temp_present_mean_degC_Ann_2009.tif")
+pres.obsmn.ann.degf<-raster("StatDS_HI_Temp_present_mean_degF_Ann_2009.tif")
+
+
+#Temp DegC & DegK:
+#Ann:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_TemperatureTIF\\DynDS_FutureSeasChange_Temp_degC_250m")
+rcp45.chg.ann.degc<-raster("DynDS_HI_Temp_degC_chng_rcp45_Ann_2100.tif")
+rcp85.chg.ann.degc<-raster("DynDS_HI_Temp_degC_chng_rcp85_Ann_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.ann.degc + pres.obsmn.ann.degc)
+newfut.rcp85<-(rcp85.chg.ann.degc + pres.obsmn.ann.degc)
+#convert degC to degK
+newfut.rcp45.degK<-newfut.rcp45+273.15
+newfut.rcp85.degK<-newfut.rcp85+273.15
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_TemperatureTIF\\DynDS_SeasMeans_State_Temp_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_Temp_rcp45_mean_degC_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_Temp_rcp85_mean_degC_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp45.degK, "DynDS_HI_Temp_rcp45_mean_degK_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85.degK, "DynDS_HI_Temp_rcp85_mean_degK_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+
+#Temp DegF:
+#Ann:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_TemperatureTIF\\DynDS_FutureSeasChange_Temp_degF_250m")
+rcp45.chg.ann.degf<-raster("DynDS_HI_Temp_degF_chng_rcp45_Ann_2100.tif")
+rcp85.chg.ann.degf<-raster("DynDS_HI_Temp_degF_chng_rcp85_Ann_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.ann.degf + pres.obsmn.ann.degf)
+newfut.rcp85<-(rcp85.chg.ann.degf + pres.obsmn.ann.degf)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_TemperatureTIF\\DynDS_SeasMeans_State_Temp_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_Temp_rcp45_mean_degF_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_Temp_rcp85_mean_degF_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+
+
+#RF inches:
+#Ann:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_FutureSeasChange_RF_in_250m")
+rcp45.chg.ann.in<-raster("DynDS_HI_RF_in_chng_rcp45_Ann_2100.tif")
+rcp85.chg.ann.in<-raster("DynDS_HI_RF_in_chng_rcp85_Ann_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.ann.in + pres.obsmn.ann.in)
+newfut.rcp85<-(rcp85.chg.ann.in + pres.obsmn.ann.in)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_SeasMeans_State_RF_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_RF_rcp45_mean_in_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_RF_rcp85_mean_in_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+#Wet Season:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_FutureSeasChange_RF_in_250m")
+rcp45.chg.wet.in<-raster("DynDS_HI_RF_in_chng_rcp45_Wet_2100.tif")
+rcp85.chg.wet.in<-raster("DynDS_HI_RF_in_chng_rcp85_Wet_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.wet.in + pres.obsmn.wet.in)
+newfut.rcp85<-(rcp85.chg.wet.in + pres.obsmn.wet.in)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_SeasMeans_State_RF_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_RF_rcp45_mean_in_Wet_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_RF_rcp85_mean_in_Wet_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+#Dry Season:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_FutureSeasChange_RF_in_250m")
+rcp45.chg.dry.in<-raster("DynDS_HI_RF_in_chng_rcp45_Dry_2100.tif")
+rcp85.chg.dry.in<-raster("DynDS_HI_RF_in_chng_rcp85_Dry_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.dry.in + pres.obsmn.dry.in)
+newfut.rcp85<-(rcp85.chg.dry.in + pres.obsmn.dry.in)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_SeasMeans_State_RF_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_RF_rcp45_mean_in_Dry_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_RF_rcp85_mean_in_Dry_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+
+
+#RF mm:
+#Ann:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_FutureSeasChange_RF_mm_250m")
+rcp45.chg.ann.mm<-raster("DynDS_HI_RF_mm_chng_rcp45_Ann_2100.tif")
+rcp85.chg.ann.mm<-raster("DynDS_HI_RF_mm_chng_rcp85_Ann_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.ann.mm + pres.obsmn.ann.mm)
+newfut.rcp85<-(rcp85.chg.ann.mm + pres.obsmn.ann.mm)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_SeasMeans_State_RF_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_RF_rcp45_mean_mm_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_RF_rcp85_mean_mm_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+#Wet Season:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_FutureSeasChange_RF_mm_250m")
+rcp45.chg.wet.mm<-raster("DynDS_HI_RF_mm_chng_rcp45_Wet_2100.tif")
+rcp85.chg.wet.mm<-raster("DynDS_HI_RF_mm_chng_rcp85_Wet_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.wet.mm + pres.obsmn.wet.mm)
+newfut.rcp85<-(rcp85.chg.wet.mm + pres.obsmn.wet.mm)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_SeasMeans_State_RF_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_RF_rcp45_mean_mm_Wet_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_RF_rcp85_mean_mm_Wet_2100_obs.tif", format="GTiff",overwrite=TRUE)
+
+#Dry Season:
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_FutureSeasChange_RF_mm_250m")
+rcp45.chg.dry.mm<-raster("DynDS_HI_RF_mm_chng_rcp45_Dry_2100.tif")
+rcp85.chg.dry.mm<-raster("DynDS_HI_RF_mm_chng_rcp85_Dry_2100.tif")
+#Add to present mean, create new Future Mean
+newfut.rcp45<-(rcp45.chg.dry.mm + pres.obsmn.dry.mm)
+newfut.rcp85<-(rcp85.chg.dry.mm + pres.obsmn.dry.mm)
+setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_RainfallTIF\\DynDS_SeasMeans_State_RF_250m\\FutureMeans_CompareToObs")
+writeRaster(newfut.rcp45, "DynDS_HI_RF_rcp45_mean_mm_Dry_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_RF_rcp85_mean_mm_Dry_2100_obs.tif", format="GTiff",overwrite=TRUE)
 
