@@ -239,10 +239,10 @@ newfut.rcp85<-(rcp85.chg.ann.degc + pres.obsmn.ann.degc)
 newfut.rcp45.degK<-newfut.rcp45+273.15
 newfut.rcp85.degK<-newfut.rcp85+273.15
 setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_TemperatureTIF\\DynDS_2FutureMeans_SDS_comp\\DynDS_FutureSeasMeans_Temp_degC_250m_SDS")
-writeRaster(newfut.rcp45, "DynDS_HI_Temp_rcp45_mean_degC_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
-writeRaster(newfut.rcp85, "DynDS_HI_Temp_rcp85_mean_degC_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
-writeRaster(newfut.rcp45.degK, "DynDS_HI_Temp_rcp45_mean_degK_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
-writeRaster(newfut.rcp85.degK, "DynDS_HI_Temp_rcp85_mean_degK_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp45, "DynDS_HI_Temp_rcp45_mean_degC_Ann_2100_SDS.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_Temp_rcp85_mean_degC_Ann_2100_SDS.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp45.degK, "DynDS_HI_Temp_rcp45_mean_degK_Ann_2100_SDS.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85.degK, "DynDS_HI_Temp_rcp85_mean_degK_Ann_2100_SDS.tif", format="GTiff",overwrite=TRUE)
 
 
 #Temp DegF:
@@ -254,8 +254,8 @@ rcp85.chg.ann.degf<-raster("DynDS_HI_Temp_degF_chng_rcp85_Ann_2100.tif")
 newfut.rcp45<-(rcp45.chg.ann.degf + pres.obsmn.ann.degf)
 newfut.rcp85<-(rcp85.chg.ann.degf + pres.obsmn.ann.degf)
 setwd("H:\\Downscaling\\Dynamical\\CMIP5\\DynDS_TemperatureTIF\\DynDS_2FutureMeans_SDS_comp\\DynDS_FutureSeasMeans_Temp_degF_250m_SDS")
-writeRaster(newfut.rcp45, "DynDS_HI_Temp_rcp45_mean_degF_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
-writeRaster(newfut.rcp85, "DynDS_HI_Temp_rcp85_mean_degF_Ann_2100_obs.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp45, "DynDS_HI_Temp_rcp45_mean_degF_Ann_2100_SDS.tif", format="GTiff",overwrite=TRUE)
+writeRaster(newfut.rcp85, "DynDS_HI_Temp_rcp85_mean_degF_Ann_2100_SDS.tif", format="GTiff",overwrite=TRUE)
 
 
 
